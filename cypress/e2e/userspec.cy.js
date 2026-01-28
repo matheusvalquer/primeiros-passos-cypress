@@ -1,14 +1,16 @@
 import userData from '../fixtures/user-data.json'
+import LoginPage from '../pages/loginPage'
+import DashboardPage from '../pages/dashboardPage'
+import MenuPage from '../pages/menuPage'
+
+const loginPage = new LoginPage
+const dashboardPage = new DashboardPage
+const menuPage = new MenuPage
 
 describe('Orange HRM Tests', () => {
 
   const selectorsList = {
-    usernameField: '[name="username"]',
-    passworldFiel: '[name="password"]',
-    loginButton: '.oxd-button',
-    sectionTitleTopBar: '.oxd-topbar-header-breadcrumb > .oxd-text',
-    wrongCredentialAlert: "[role='alert']",
-    myInfoButton: '[href="/web/index.php/pim/viewMyDetails"]',
+    
     firstNameField: "[name='firstName']",
     middleNameField: "[name='middleName']",
     lastNameField: "[name='lastName']",
@@ -22,16 +24,15 @@ describe('Orange HRM Tests', () => {
     
   }
 
- 
-
   it.only('User Info Update - Success', () => {
-    cy.visit('/auth/login')
-    cy.get(selectorsList.usernameField).type(userData.userSuccess.username)
-    cy.get(selectorsList.passworldFiel).type(userData.userSuccess.passworld)
-    cy.get(selectorsList.loginButton).click()
-    cy.location('pathname').should('equal', '/web/index.php/dashboard/index')
-    cy.get(selectorsList.sectionTitleTopBar).contains('Dashboard')
-    cy.get(selectorsList.myInfoButton).click({ force: true })
+    loginPage.accessLoginPage()
+    loginPage.loginWithAnyUser(userData.userSuccess.username, userData.userSuccess.passworld)
+
+    dashboardPage.checkDashboardPage()
+
+    menuPage.accessMyInfo()
+
+  
     cy.get(selectorsList.firstNameField).clear().type('Matheus')
     cy.get(selectorsList.middleNameField).clear().type('Fierce')
     cy.get(selectorsList.lastNameField).clear().type('Tester')
@@ -49,10 +50,8 @@ describe('Orange HRM Tests', () => {
     cy.get(selectorsList.submitButton).eq(0).click()
     cy.get('body').should('contain', 'Successfully Updated')
     
-  
-    
-
   })
+  
   it('Login - Fail', () => {
     cy.visit('/auth/login')
     cy.get(selectorsList.usernameField).type(userData.userFail.username)
