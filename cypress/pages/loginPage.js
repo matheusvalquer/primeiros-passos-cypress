@@ -3,7 +3,7 @@ class LoginPage {
     selectorsList () {
         const selectors = {
             usernameField: '[name="username"]',
-            passworldFiel: '[name="password"]',
+            passwordFiel: '[name="password"]',
             loginButton: '.oxd-button',
             wrongCredentialAlert: "[role='alert']",
         }
@@ -17,9 +17,12 @@ class LoginPage {
 
     loginWithAnyUser(username, password) {
         cy.get(this.selectorsList().usernameField).type(username)
-        cy.get(this.selectorsList().passworldFiel).type(password)
+        cy.get(this.selectorsList().passwordFiel).type(password)
         cy.get(this.selectorsList().loginButton).click()
+    }
 
+    checkAccessInvalid() {
+        cy.get(this.selectorsList().wrongCredentialAlert) 
     }
 }
 
